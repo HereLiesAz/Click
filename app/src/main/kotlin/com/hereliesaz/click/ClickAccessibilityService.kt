@@ -17,6 +17,7 @@ import android.view.MotionEvent
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ScrollView
+import kotlin.math.abs
 
 class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
 
@@ -25,13 +26,24 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
     private var overlayView: ScrollView? = null
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
+    private var accelerometer: Sensor? = null
 
+    // Proximity sensor variables
     private var proximityCoverTime = 0L
     private var isProximityCovered = false
     private var isCameraAppActive = false
 
+    // Accelerometer variables
+    private var lastX = 0f
+    private var lastY = 0f
+    private var lastZ = 0f
+    private var lastShakeTime = 0L
+
     companion object {
-        private const val PROXIMITY_TAP_THRESHOLD_MS = 500L // Max duration for a 'tap'
+        private const val PROXIMITY_TAP_THRESHOLD_MS = 500L
+        private const val VIBRATION_TAP_THRESHOLD = 25.0 // m/s^2
+        private const val VIBRATION_COOLDOWN_MS = 500L
+
         private val CAMERA_PACKAGES = setOf(
             "com.google.android.GoogleCamera", "com.android.camera", "com.android.camera2",
             "com.samsung.android.camera", "com.oneplus.camera", "com.motorola.cameraone",
@@ -47,8 +59,13 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
         proximitySensor?.let {
             sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        accelerometer?.let {
+            sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
         }
     }
 
@@ -98,10 +115,17 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        val lensTapEnabled = prefs.getBoolean(MainActivity.KEY_LENS_TAP_ENABLED, false)
-        if (!lensTapEnabled || event.sensor.type != Sensor.TYPE_PROXIMITY || !isCameraAppActive) {
-            return
+        if (!isCameraAppActive) return
+
+        when (event.sensor.type) {
+            Sensor.TYPE_PROXIMITY -> handleProximityEvent(event)
+            Sensor.TYPE_ACCELEROMETER -> handleAccelerometerEvent(event)
         }
+    }
+
+    private fun handleProximityEvent(event: SensorEvent) {
+        val lensTapProximityEnabled = prefs.getBoolean(MainActivity.KEY_LENS_TAP_PROXIMITY_ENABLED, false)
+        if (!lensTapProximityEnabled) return
 
         val distance = event.values[0]
         val maxRange = proximitySensor?.maximumRange ?: distance
@@ -121,6 +145,34 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
             }
         }
     }
+
+    private fun handleAccelerometerEvent(event: SensorEvent) {
+        val lensTapVibrationEnabled = prefs.getBoolean(MainActivity.KEY_LENS_TAP_VIBRATION_ENABLED, false)
+        if (!lensTapVibrationEnabled) return
+
+        val currentTime = SystemClock.uptimeMillis()
+        if ((currentTime - lastShakeTime) < VIBRATION_COOLDOWN_MS) {
+            return
+        }
+
+        val x = event.values[0]
+        val y = event.values[1]
+        val z = event.values[2]
+
+        val deltaX = abs(x - lastX)
+        val deltaY = abs(y - lastY)
+        val deltaZ = abs(z - lastZ)
+
+        if (deltaX > VIBRATION_TAP_THRESHOLD || deltaY > VIBRATION_TAP_THRESHOLD || deltaZ > VIBRATION_TAP_THRESHOLD) {
+            lastShakeTime = currentTime
+            takePicture()
+        }
+
+        lastX = x
+        lastY = y
+        lastZ = z
+    }
+
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
