@@ -75,10 +75,19 @@
             android:paddingBottom="8dp"/>
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/lens_tap_switch"
+            android:id="@+id/lens_tap_proximity_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enable_lens_tap_proximity"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/lens_tap_vibration_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_lens_tap_vibration"
             android:textSize="16sp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"/>
