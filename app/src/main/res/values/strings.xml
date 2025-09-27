@@ -8,5 +8,6 @@
     <string name="enable_fingerprint_scroll">Enable Fingerprint Scroll</string>
     <string name="enable_lens_tap_proximity">Enable Lens Tap (Proximity)</string>
     <string name="enable_lens_tap_vibration">Enable Lens Tap (Vibration)</string>
+    <string name="vibration_sensitivity">Vibration Sensitivity</string>
     <string name="options_note">Note: For options to work, both the Service and Overlay Permission must be enabled.</string>
 </resources>
