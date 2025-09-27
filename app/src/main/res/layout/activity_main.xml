@@ -92,6 +92,18 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vibration_sensitivity"
+            android:layout_marginTop="8dp"/>
+        <SeekBar
+            android:id="@+id/vibration_sensitivity_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50" />
+
     </LinearLayout>
 
     <TextView
