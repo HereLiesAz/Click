@@ -2,6 +2,8 @@ package com.hereliesaz.click
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
@@ -12,24 +14,41 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var serviceStatusText: TextView
+    private lateinit var overlayStatusText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         serviceStatusText = findViewById(R.id.service_status_text)
+        overlayStatusText = findViewById(R.id.overlay_permission_status_text)
+
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
+        val enableOverlayButton: Button = findViewById(R.id.enable_overlay_permission_button)
+
 
         enableServiceButton.setOnClickListener {
             // Open the accessibility settings screen
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             startActivity(intent)
         }
+
+        enableOverlayButton.setOnClickListener {
+            // Open settings to grant overlay permission
+            if (!Settings.canDrawOverlays(this)) {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:$packageName")
+                )
+                startActivity(intent)
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         updateServiceStatus()
+        updateOverlayPermissionStatus()
     }
 
     private fun updateServiceStatus() {
@@ -41,6 +60,17 @@ class MainActivity : AppCompatActivity() {
             serviceStatusText.setBackgroundColor(0xFFFFCDD2.toInt()) // A cautionary red
         }
     }
+
+    private fun updateOverlayPermissionStatus() {
+        if (Settings.canDrawOverlays(this)) {
+            overlayStatusText.text = "Overlay Permission: Granted"
+            overlayStatusText.setBackgroundColor(0xFFC8E6C9.toInt())
+        } else {
+            overlayStatusText.text = "Overlay Permission: Denied"
+            overlayStatusText.setBackgroundColor(0xFFFFCDD2.toInt())
+        }
+    }
+
 
     companion object {
         fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>): Boolean {
@@ -60,3 +90,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
