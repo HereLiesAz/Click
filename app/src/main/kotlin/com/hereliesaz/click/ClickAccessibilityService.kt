@@ -41,7 +41,10 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
 
     companion object {
         private const val PROXIMITY_TAP_THRESHOLD_MS = 500L
-        private const val VIBRATION_TAP_THRESHOLD = 25.0 // m/s^2
+        // Base threshold. This will be scaled by the user's sensitivity setting.
+        private const val VIBRATION_BASE_THRESHOLD = 10.0
+        // Max threshold, so 100% sensitivity is not impossible to trigger
+        private const val VIBRATION_MAX_THRESHOLD = 60.0
         private const val VIBRATION_COOLDOWN_MS = 500L
 
         private val CAMERA_PACKAGES = setOf(
@@ -60,13 +63,19 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    }
 
+    private fun registerSensors() {
         proximitySensor?.let {
             sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
         accelerometer?.let {
             sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
         }
+    }
+
+    private fun unregisterSensors() {
+        sensorManager?.unregisterListener(this)
     }
 
     private fun createOverlayView() {
@@ -89,9 +98,11 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
             if (isNowCamera && !isCameraAppActive) {
                 isCameraAppActive = true
                 showOverlay()
+                registerSensors()
             } else if (!isNowCamera && isCameraAppActive) {
                 isCameraAppActive = false
                 hideOverlay()
+                unregisterSensors()
             }
         }
     }
@@ -155,6 +166,14 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
             return
         }
 
+        // Calculate dynamic threshold based on user sensitivity setting (0-100)
+        val sensitivity = prefs.getInt(MainActivity.KEY_VIBRATION_SENSITIVITY, 50)
+        // A lower sensitivity progress means a higher threshold is needed.
+        // We map progress [0, 100] to a threshold range.
+        val progress = sensitivity / 100.0
+        val dynamicThreshold = VIBRATION_MAX_THRESHOLD - (progress * (VIBRATION_MAX_THRESHOLD - VIBRATION_BASE_THRESHOLD))
+
+
         val x = event.values[0]
         val y = event.values[1]
         val z = event.values[2]
@@ -163,7 +182,7 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         val deltaY = abs(y - lastY)
         val deltaZ = abs(z - lastZ)
 
-        if (deltaX > VIBRATION_TAP_THRESHOLD || deltaY > VIBRATION_TAP_THRESHOLD || deltaZ > VIBRATION_TAP_THRESHOLD) {
+        if (deltaX > dynamicThreshold || deltaY > dynamicThreshold || deltaZ > dynamicThreshold) {
             lastShakeTime = currentTime
             takePicture()
         }
@@ -184,11 +203,15 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         dispatchGesture(gestureBuilder.build(), null, null)
     }
 
-    override fun onInterrupt() {}
+    override fun onInterrupt() {
+        isCameraAppActive = false
+        hideOverlay()
+        unregisterSensors()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         hideOverlay()
-        sensorManager?.unregisterListener(this)
+        unregisterSensors()
     }
 }
