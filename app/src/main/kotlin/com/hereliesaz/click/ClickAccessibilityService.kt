@@ -17,6 +17,15 @@ import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ScrollView
 
+/**
+ * An Accessibility Service that detects when a camera app is in the foreground and
+ * provides alternative methods to trigger the camera shutter using device sensors.
+ *
+ * This service is responsible for:
+ * - Interacting with the Android Framework (WindowManager, SensorManager).
+ * - Listening for `TYPE_WINDOW_STATE_CHANGED` events to detect when a camera app is active.
+ * - Delegating the actual trigger logic to a [CameraTriggerHandler].
+ */
 class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
 
     private lateinit var windowManager: WindowManager
@@ -26,12 +35,14 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
     private var accelerometer: Sensor? = null
     private lateinit var triggerHandler: CameraTriggerHandler
 
+    // State variables for the service
     private var isCameraAppActive = false
     private var lastX = 0f
     private var lastY = 0f
     private var lastZ = 0f
 
     companion object {
+        /** A set of package names for common camera applications. */
         private val CAMERA_PACKAGES = setOf(
             "com.google.android.GoogleCamera", "com.android.camera", "com.android.camera2",
             "com.samsung.android.camera", "com.oneplus.camera", "com.motorola.cameraone",
@@ -39,6 +50,9 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         )
     }
 
+    /**
+     * Called when the service is connected. Initializes system services and the trigger handler.
+     */
     override fun onServiceConnected() {
         super.onServiceConnected()
         triggerHandler = CameraTriggerHandler(
@@ -52,15 +66,26 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         createOverlayView()
     }
 
+    /**
+     * Registers the sensor listeners to start detecting events.
+     * This is called only when a camera app becomes active.
+     */
     private fun registerSensors() {
         proximitySensor?.let { sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
         accelerometer?.let { sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI) }
     }
 
+    /**
+     * Unregisters the sensor listeners to save battery.
+     * This is called when a camera app is no longer active.
+     */
     private fun unregisterSensors() {
         sensorManager?.unregisterListener(this)
     }
 
+    /**
+     * Inflates and configures the transparent overlay view used for the fingerprint scroll trigger.
+     */
     private fun createOverlayView() {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         overlayView = inflater.inflate(R.layout.overlay_layout, null) as ScrollView
@@ -72,6 +97,11 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         }
     }
 
+    /**
+     * Handles `TYPE_WINDOW_STATE_CHANGED` events to detect when a camera app is active or inactive,
+     * controlling the visibility of the overlay and the registration of sensor listeners.
+     * @param event The accessibility event.
+     */
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName?.toString() ?: return
@@ -89,6 +119,10 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         }
     }
 
+    /**
+     * Adds the overlay view to the window manager if it's not already shown and if the
+     * app has the necessary permission to draw overlays.
+     */
     private fun showOverlay() {
         if (overlayView?.windowToken == null && Settings.canDrawOverlays(this)) {
             val params = WindowManager.LayoutParams(
@@ -101,12 +135,20 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         }
     }
 
+    /**
+     * Removes the overlay view from the window manager if it is currently shown.
+     */
     private fun hideOverlay() {
         if (overlayView?.windowToken != null) {
             windowManager.removeView(overlayView)
         }
     }
 
+    /**
+     * Called when sensor values have changed. This method routes the event to the
+     * [CameraTriggerHandler] to process the logic.
+     * @param event The sensor event.
+     */
     override fun onSensorChanged(event: SensorEvent) {
         if (!isCameraAppActive) return
 
@@ -132,8 +174,13 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         }
     }
 
+    /** Required by SensorEventListener, but not used here. */
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+    /**
+     * Dispatches a tap gesture to the center of the screen, which most
+     * camera apps interpret as a command to take a picture.
+     */
     private fun takePicture() {
         val displayMetrics = resources.displayMetrics
         val centerX = displayMetrics.widthPixels / 2f
@@ -146,12 +193,18 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
         dispatchGesture(gestureBuilder.build(), null, null)
     }
 
+    /**
+     * Called when the service is interrupted. Cleans up resources to prevent leaks.
+     */
     override fun onInterrupt() {
         isCameraAppActive = false
         hideOverlay()
         unregisterSensors()
     }
 
+    /**
+     * Called when the service is being destroyed. Cleans up resources.
+     */
     override fun onDestroy() {
         super.onDestroy()
         hideOverlay()
