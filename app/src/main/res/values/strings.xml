@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Click</string>
     <string name="accessibility_service_label">Click Service</string>
-    <string name="accessibility_service_description">This service allows 'Click' to detect when a camera app is active and use the proximity sensor to take photos. It observes window changes to identify the active app but does not read any content.</string>
+    <string name="accessibility_service_description">This service allows 'Click' to overlay a scrollbar and use the proximity sensor to take photos. It observes window changes to identify the active app but does not read any content.</string>
+    <string name="enable_accessibility_service">Enable Accessibility Service</string>
+    <string name="enable_overlay_permission">Enable Overlay Permission</string>
+    <string name="options">Options</string>
+    <string name="enable_fingerprint_scroll">Enable Fingerprint Scroll</string>
+    <string name="enable_lens_tap_proximity">Enable Lens Tap (Proximity)</string>
+    <string name="options_note">Note: For options to work, both the Service and Overlay Permission must be enabled.</string>
 </resources>
