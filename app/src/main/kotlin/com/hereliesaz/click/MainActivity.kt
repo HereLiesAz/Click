@@ -17,13 +17,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var serviceStatusText: TextView
     private lateinit var overlayStatusText: TextView
     private lateinit var fingerprintSwitch: SwitchCompat
-    private lateinit var lensTapSwitch: SwitchCompat
+    private lateinit var lensTapProximitySwitch: SwitchCompat
+    private lateinit var lensTapVibrationSwitch: SwitchCompat
     private lateinit var prefs: SharedPreferences
 
     companion object {
         const val PREFS_NAME = "ClickPrefs"
         const val KEY_FINGERPRINT_ENABLED = "fingerprintEnabled"
-        const val KEY_LENS_TAP_ENABLED = "lensTapEnabled"
+        const val KEY_LENS_TAP_PROXIMITY_ENABLED = "lensTapProximityEnabled"
+        const val KEY_LENS_TAP_VIBRATION_ENABLED = "lensTapVibrationEnabled"
 
         fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>): Boolean {
             val colonSplitter = TextUtils.SimpleStringSplitter(':')
@@ -51,7 +53,8 @@ class MainActivity : AppCompatActivity() {
         serviceStatusText = findViewById(R.id.service_status_text)
         overlayStatusText = findViewById(R.id.overlay_permission_status_text)
         fingerprintSwitch = findViewById(R.id.fingerprint_scroll_switch)
-        lensTapSwitch = findViewById(R.id.lens_tap_switch)
+        lensTapProximitySwitch = findViewById(R.id.lens_tap_proximity_switch)
+        lensTapVibrationSwitch = findViewById(R.id.lens_tap_vibration_switch)
 
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
         val enableOverlayButton: Button = findViewById(R.id.enable_overlay_permission_button)
@@ -75,8 +78,12 @@ class MainActivity : AppCompatActivity() {
             prefs.edit().putBoolean(KEY_FINGERPRINT_ENABLED, isChecked).apply()
         }
 
-        lensTapSwitch.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean(KEY_LENS_TAP_ENABLED, isChecked).apply()
+        lensTapProximitySwitch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_LENS_TAP_PROXIMITY_ENABLED, isChecked).apply()
+        }
+
+        lensTapVibrationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_LENS_TAP_VIBRATION_ENABLED, isChecked).apply()
         }
     }
 
@@ -89,7 +96,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadPreferences() {
         fingerprintSwitch.isChecked = prefs.getBoolean(KEY_FINGERPRINT_ENABLED, false)
-        lensTapSwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_ENABLED, false)
+        lensTapProximitySwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_PROXIMITY_ENABLED, false)
+        lensTapVibrationSwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_VIBRATION_ENABLED, false)
     }
 
     private fun updateServiceStatus() {
