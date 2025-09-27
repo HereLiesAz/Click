@@ -13,6 +13,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
+/**
+ * The main entry point of the application.
+ * This activity provides the user interface for:
+ * 1. Guiding the user to enable the required Accessibility Service and Overlay permissions.
+ * 2. Allowing the user to enable or disable the different camera trigger methods.
+ * 3. Displaying the current status of the required permissions.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var serviceStatusText: TextView
@@ -24,13 +31,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
 
     companion object {
+        /** SharedPreferences file name for storing user settings. */
         const val PREFS_NAME = "ClickPrefs"
+        /** SharedPreferences key for the fingerprint scroll option. */
         const val KEY_FINGERPRINT_ENABLED = "fingerprintEnabled"
+        /** SharedPreferences key for the proximity sensor option. */
         const val KEY_LENS_TAP_PROXIMITY_ENABLED = "lensTapProximityEnabled"
+        /** SharedPreferences key for the accelerometer option. */
         const val KEY_LENS_TAP_VIBRATION_ENABLED = "lensTapVibrationEnabled"
+        /** SharedPreferences key for the vibration sensitivity setting. */
         const val KEY_VIBRATION_SENSITIVITY = "vibrationSensitivity"
 
-
+        /**
+         * Checks if the specified Accessibility Service is currently enabled in the system settings.
+         * @param context The application context.
+         * @param accessibilityService The class of the service to check.
+         * @return `true` if the service is enabled, `false` otherwise.
+         */
         fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>): Boolean {
             val colonSplitter = TextUtils.SimpleStringSplitter(':')
             val settingValue = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
@@ -48,12 +65,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initializes the activity, sets up the UI, and configures listeners for user interactions.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
+        // Initialize UI components
         serviceStatusText = findViewById(R.id.service_status_text)
         overlayStatusText = findViewById(R.id.overlay_permission_status_text)
         fingerprintSwitch = findViewById(R.id.fingerprint_scroll_switch)
@@ -65,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
         val enableOverlayButton: Button = findViewById(R.id.enable_overlay_permission_button)
 
+        // Set up button listeners to open system settings
         enableServiceButton.setOnClickListener {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             startActivity(intent)
@@ -80,6 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Set up switch listeners to save preferences
         fingerprintSwitch.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean(KEY_FINGERPRINT_ENABLED, isChecked).apply()
         }
@@ -104,6 +127,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Called when the activity is resumed. Updates the UI to reflect the current
+     * state of permissions and user settings.
+     */
     override fun onResume() {
         super.onResume()
         updateServiceStatus()
@@ -111,6 +138,9 @@ class MainActivity : AppCompatActivity() {
         loadPreferences()
     }
 
+    /**
+     * Loads the saved preferences and sets the state of the UI switches accordingly.
+     */
     private fun loadPreferences() {
         fingerprintSwitch.isChecked = prefs.getBoolean(KEY_FINGERPRINT_ENABLED, false)
         lensTapProximitySwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_PROXIMITY_ENABLED, false)
@@ -119,6 +149,10 @@ class MainActivity : AppCompatActivity() {
         vibrationSensitivitySeekbar.isEnabled = lensTapVibrationSwitch.isChecked
     }
 
+    /**
+     * Updates the text and background color of the service status TextView based
+     * on whether the Accessibility Service is enabled.
+     */
     private fun updateServiceStatus() {
         if (isAccessibilityServiceEnabled(this, ClickAccessibilityService::class.java)) {
             serviceStatusText.text = "Service Status: Enabled"
@@ -129,6 +163,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Updates the text and background color of the overlay permission status TextView
+     * based on whether the permission has been granted.
+     */
     private fun updateOverlayPermissionStatus() {
         if (Settings.canDrawOverlays(this)) {
             overlayStatusText.text = "Overlay Permission: Granted"
