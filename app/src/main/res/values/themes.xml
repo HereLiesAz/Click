@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
+    <!-- Application theme. -->
     <style name="Theme.Click" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -13,5 +13,10 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <!-- Splash screen attributes -->
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@android:drawable/sym_def_app_icon</item>
+        <!-- android:postSplashScreenTheme is removed for simplification -->
     </style>
 </resources>
