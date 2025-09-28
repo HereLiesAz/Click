@@ -6,14 +6,14 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center_horizontal"
-    android:background="?attr/colorSurface" <!-- M3: Use theme background -->
+    android:background="?attr/colorSurface"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Click."
-        android:textAppearance="?attr/textAppearanceDisplayMedium" <!-- M3: Typography -->
+        android:textAppearance="?attr/textAppearanceDisplayMedium"
         android:layout_marginBottom="24dp"/>
 
     <TextView
@@ -21,15 +21,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Service Status: Disabled"
-        android:textAppearance="?attr/textAppearanceBodyLarge" <!-- M3: Typography -->
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:padding="12dp"
-        android:background="?attr/colorSurfaceVariant" <!-- M3: Surface for contrast -->
+        android:background="?attr/colorSurfaceVariant"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/enable_service_button"
-        style="?attr/materialButtonOutlinedStyle" <!-- M3: Button style (example) -->
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enable_accessibility_service" />
@@ -39,16 +39,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Overlay Permission: Denied"
-        android:textAppearance="?attr/textAppearanceBodyLarge" <!-- M3: Typography -->
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:padding="12dp"
-        android:background="?attr/colorSurfaceVariant" <!-- M3: Surface for contrast -->
+        android:background="?attr/colorSurfaceVariant"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/enable_overlay_permission_button"
-        style="?attr/materialButtonOutlinedStyle" <!-- M3: Button style (example) -->
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enable_overlay_permission"/>
@@ -60,24 +60,24 @@
         android:orientation="vertical"
         android:layout_marginTop="24dp"
         android:padding="16dp"
-        android:background="?attr/colorSurfaceContainer" > <!-- M3: Use a themed surface color -->
+        android:background="?attr/colorSurfaceContainer">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/options"
-            android:textAppearance="?attr/textAppearanceTitleMedium" <!-- M3: Typography for title -->
-            android:textColor="?attr/colorOnSurface" <!-- M3: Ensure text contrast -->
-            android:layout_marginBottom="16dp"/> <!-- Increased margin for M3 spacing -->
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginBottom="16dp"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/fingerprint_scroll_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enable_fingerprint_scroll"
-            android:textAppearance="?attr/textAppearanceBodyLarge" <!-- M3: Typography for switch text -->
-            android:textColor="?attr/colorOnSurface" <!-- M3: Ensure text contrast -->
-            android:paddingTop="12dp" <!-- Adjusted padding for M3 feel -->
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:paddingTop="12dp"
             android:paddingBottom="12dp"/>
 
         <androidx.appcompat.widget.SwitchCompat
@@ -85,8 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enable_lens_tap_proximity"
-            android:textAppearance="?attr/textAppearanceBodyLarge" <!-- M3: Typography for switch text -->
-            android:textColor="?attr/colorOnSurface" <!-- M3: Ensure text contrast -->
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"/>
 
@@ -95,8 +95,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enable_lens_tap_vibration"
-            android:textAppearance="?attr/textAppearanceBodyLarge" <!-- M3: Typography for switch text -->
-            android:textColor="?attr/colorOnSurface" <!-- M3: Ensure text contrast -->
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"/>
 
@@ -104,8 +104,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/vibration_sensitivity"
-            android:textAppearance="?attr/textAppearanceBodyMedium" <!-- M3: Typography -->
-            android:textColor="?attr/colorOnSurfaceVariant" <!-- M3: Ensure text contrast -->
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="16dp"/>
         <SeekBar
             android:id="@+id/vibration_sensitivity_seekbar"
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:max="100"
             android:progress="50"
-            android:layout_marginTop="8dp"/> <!-- M3: Added top margin for spacing -->
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 
@@ -121,7 +121,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/options_note"
-        android:textAppearance="?attr/textAppearanceBodySmall" <!-- M3: Typography -->
+        android:textAppearance="?attr/textAppearanceBodySmall"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginTop="16dp"
         android:gravity="center"/>
