@@ -21,6 +21,8 @@ class CameraTriggerHandler(
     private var isProximityCovered = false
     private var lastShakeTime = -1L
     private var lastFingerprintTime = -1L
+    private var lastTapTime = 0L
+    private var tapCount = 0
 
     companion object {
         private const val PROXIMITY_TAP_THRESHOLD_MS = 500L
@@ -28,6 +30,9 @@ class CameraTriggerHandler(
         private const val VIBRATION_MAX_THRESHOLD = 60.0
         private const val VIBRATION_COOLDOWN_MS = 500L
         private const val FINGERPRINT_COOLDOWN_MS = 500L
+        private const val BACK_TAP_THRESHOLD = 25.0
+        private const val BACK_TAP_WINDOW_MS = 500L
+        private const val BACK_TAP_COOLDOWN_MS = 1000L
     }
 
     /**
@@ -93,6 +98,36 @@ class CameraTriggerHandler(
             lastShakeTime = currentTime
             return true
         }
+        return false
+    }
+
+    fun handleBackTapEvent(z: Float, lastZ: Float): Boolean {
+        val backTapEnabled = prefsProvider().getBoolean(MainActivity.KEY_BACK_TAP_ENABLED, false)
+        if (!backTapEnabled) return false
+
+        val currentTime = clock.uptimeMillis()
+        val deltaZ = abs(z - lastZ)
+
+        if (deltaZ > BACK_TAP_THRESHOLD) {
+            if (currentTime - lastTapTime > BACK_TAP_WINDOW_MS) {
+                tapCount = 1
+            } else {
+                tapCount++
+            }
+            lastTapTime = currentTime
+
+            if (tapCount == 2) {
+                tapCount = 0
+                lastTapTime = currentTime + BACK_TAP_COOLDOWN_MS // Enforce cooldown
+                return true
+            }
+        }
+
+        // Reset tap count if the window expires
+        if (currentTime - lastTapTime > BACK_TAP_WINDOW_MS) {
+            tapCount = 0
+        }
+
         return false
     }
 

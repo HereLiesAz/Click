@@ -5,13 +5,18 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.provider.Settings
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 /**
  * The main entry point of the application.
@@ -27,20 +32,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fingerprintSwitch: SwitchCompat
     private lateinit var lensTapProximitySwitch: SwitchCompat
     private lateinit var lensTapVibrationSwitch: SwitchCompat
+    private lateinit var backTapSwitch: SwitchMaterial
     private lateinit var vibrationSensitivitySeekbar: SeekBar
+    private lateinit var themeSwitch: SwitchMaterial
     private lateinit var prefs: SharedPreferences
 
     companion object {
         /** SharedPreferences file name for storing user settings. */
         const val PREFS_NAME = "ClickPrefs"
+        const val KEY_DARK_MODE = "darkMode"
         /** SharedPreferences key for the fingerprint scroll option. */
         const val KEY_FINGERPRINT_ENABLED = "fingerprintEnabled"
         /** SharedPreferences key for the proximity sensor option. */
         const val KEY_LENS_TAP_PROXIMITY_ENABLED = "lensTapProximityEnabled"
         /** SharedPreferences key for the accelerometer option. */
         const val KEY_LENS_TAP_VIBRATION_ENABLED = "lensTapVibrationEnabled"
+        const val KEY_BACK_TAP_ENABLED = "backTapEnabled"
         /** SharedPreferences key for the vibration sensitivity setting. */
         const val KEY_VIBRATION_SENSITIVITY = "vibrationSensitivity"
+        const val KEY_SHUTTER_X = "shutter_x"
+        const val KEY_SHUTTER_Y = "shutter_y"
 
         /**
          * Checks if the specified Accessibility Service is currently enabled in the system settings.
@@ -70,9 +81,10 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // Apply the theme before setting the content view
+        applyTheme()
+        setContentView(R.layout.activity_main)
 
         // Initialize UI components
         serviceStatusText = findViewById(R.id.service_status_text)
@@ -80,11 +92,26 @@ class MainActivity : AppCompatActivity() {
         fingerprintSwitch = findViewById(R.id.fingerprint_scroll_switch)
         lensTapProximitySwitch = findViewById(R.id.lens_tap_proximity_switch)
         lensTapVibrationSwitch = findViewById(R.id.lens_tap_vibration_switch)
+        backTapSwitch = findViewById(R.id.back_tap_switch)
         vibrationSensitivitySeekbar = findViewById(R.id.vibration_sensitivity_seekbar)
+        themeSwitch = findViewById(R.id.theme_switch)
 
 
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
         val enableOverlayButton: Button = findViewById(R.id.enable_overlay_permission_button)
+        val recordShutterButton: Button = findViewById(R.id.record_shutter_button)
+
+        recordShutterButton.setOnClickListener {
+            // Launch the camera app first
+            val intent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
+            startActivity(intent)
+
+            // Then, launch the gesture capture activity after a short delay
+            Handler(Looper.getMainLooper()).postDelayed({
+                val captureIntent = Intent(this, GestureCaptureActivity::class.java)
+                startActivity(captureIntent)
+            }, 1000) // 1-second delay
+        }
 
         // Set up button listeners to open system settings
         enableServiceButton.setOnClickListener {
@@ -125,6 +152,18 @@ class MainActivity : AppCompatActivity() {
                 prefs.edit().putInt(KEY_VIBRATION_SENSITIVITY, seekBar?.progress ?: 50).apply()
             }
         })
+
+        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_DARK_MODE, isChecked).apply()
+            // Set the default night mode and recreate the activity to apply the theme
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
+        backTapSwitch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_BACK_TAP_ENABLED, isChecked).apply()
+        }
     }
 
     /**
@@ -141,13 +180,22 @@ class MainActivity : AppCompatActivity() {
         loadPreferences()
     }
 
+    private fun applyTheme() {
+        val isDarkMode = prefs.getBoolean(KEY_DARK_MODE, true) // Default to dark mode
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        )
+    }
+
     /**
      * Loads the saved preferences and sets the state of the UI switches accordingly.
      */
     private fun loadPreferences() {
+        themeSwitch.isChecked = prefs.getBoolean(KEY_DARK_MODE, true)
         fingerprintSwitch.isChecked = prefs.getBoolean(KEY_FINGERPRINT_ENABLED, false)
         lensTapProximitySwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_PROXIMITY_ENABLED, false)
         lensTapVibrationSwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_VIBRATION_ENABLED, false)
+        backTapSwitch.isChecked = prefs.getBoolean(KEY_BACK_TAP_ENABLED, false)
         vibrationSensitivitySeekbar.progress = prefs.getInt(KEY_VIBRATION_SENSITIVITY, 50)
         vibrationSensitivitySeekbar.isEnabled = lensTapVibrationSwitch.isChecked
     }
