@@ -164,7 +164,10 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
                 val x = event.values[0]
                 val y = event.values[1]
                 val z = event.values[2]
-                if (triggerHandler.handleAccelerometerEvent(x, y, z, lastX, lastY, lastZ)) {
+                if (triggerHandler.handleBackTapEvent(z, lastZ)) {
+                    takePicture()
+                }
+                else if (triggerHandler.handleAccelerometerEvent(x, y, z, lastX, lastY, lastZ)) {
                     takePicture()
                 }
                 lastX = x
@@ -178,18 +181,30 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     /**
-     * Dispatches a tap gesture to the center of the screen, which most
-     * camera apps interpret as a command to take a picture.
+     * Dispatches a tap gesture to take a picture.
+     * If custom shutter coordinates are saved, it uses them. Otherwise, it defaults
+     * to tapping the center of the screen.
      */
     private fun takePicture() {
-        val displayMetrics = resources.displayMetrics
-        val centerX = displayMetrics.widthPixels / 2f
-        val centerY = displayMetrics.heightPixels / 2f
+        val prefs = getSharedPreferences(MainActivity.PREFS_NAME, Context.MODE_PRIVATE)
+        val x = prefs.getFloat(MainActivity.KEY_SHUTTER_X, -1f)
+        val y = prefs.getFloat(MainActivity.KEY_SHUTTER_Y, -1f)
 
-        val p = Path()
-        p.moveTo(centerX, centerY)
+        val tapPath = Path()
+
+        if (x != -1f && y != -1f) {
+            // Use the saved coordinates if they exist
+            tapPath.moveTo(x, y)
+        } else {
+            // Fallback to the center of the screen as a default
+            val displayMetrics = resources.displayMetrics
+            val centerX = displayMetrics.widthPixels / 2f
+            val centerY = displayMetrics.heightPixels / 2f
+            tapPath.moveTo(centerX, centerY)
+        }
+
         val gestureBuilder = GestureDescription.Builder()
-        gestureBuilder.addStroke(GestureDescription.StrokeDescription(p, 0, 1))
+        gestureBuilder.addStroke(GestureDescription.StrokeDescription(tapPath, 0, 1))
         dispatchGesture(gestureBuilder.build(), null, null)
     }
 
