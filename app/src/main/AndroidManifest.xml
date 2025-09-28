@@ -8,11 +8,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Permission to draw overlays on top of other apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- Permission to use the camera -->
-    <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- Declare camera hardware feature -->
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -37,6 +33,11 @@
         <activity
             android:name=".GestureCaptureActivity"
             android:theme="@style/Theme.Transparent"
+            android:exported="false" />
+
+        <!-- Tap Calibration Activity -->
+        <activity
+            android:name=".TapCalibrationActivity"
             android:exported="false" />
 
         <!-- Accessibility Service Declaration -->

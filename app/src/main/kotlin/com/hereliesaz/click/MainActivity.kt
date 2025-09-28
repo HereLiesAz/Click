@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         const val KEY_VIBRATION_SENSITIVITY = "vibrationSensitivity"
         const val KEY_SHUTTER_X = "shutter_x"
         const val KEY_SHUTTER_Y = "shutter_y"
+        const val KEY_BACK_TAP_SENSITIVITY = "back_tap_sensitivity"
 
         /**
          * Checks if the specified Accessibility Service is currently enabled in the system settings.
@@ -100,17 +101,18 @@ class MainActivity : AppCompatActivity() {
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
         val enableOverlayButton: Button = findViewById(R.id.enable_overlay_permission_button)
         val recordShutterButton: Button = findViewById(R.id.record_shutter_button)
+        val calibrateButton: Button = findViewById(R.id.calibrate_back_tap_button)
+
+        calibrateButton.setOnClickListener {
+            val intent = Intent(this, TapCalibrationActivity::class.java)
+            startActivity(intent)
+        }
 
         recordShutterButton.setOnClickListener {
-            // Launch the camera app first
-            val intent = Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-            startActivity(intent)
-
-            // Then, launch the gesture capture activity after a short delay
-            Handler(Looper.getMainLooper()).postDelayed({
-                val captureIntent = Intent(this, GestureCaptureActivity::class.java)
-                startActivity(captureIntent)
-            }, 1000) // 1-second delay
+            // Launch the gesture capture activity directly.
+            // The user will be instructed to open the camera app manually.
+            val captureIntent = Intent(this, GestureCaptureActivity::class.java)
+            startActivity(captureIntent)
         }
 
         // Set up button listeners to open system settings

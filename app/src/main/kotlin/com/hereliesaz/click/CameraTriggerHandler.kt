@@ -102,13 +102,16 @@ class CameraTriggerHandler(
     }
 
     fun handleBackTapEvent(z: Float, lastZ: Float): Boolean {
-        val backTapEnabled = prefsProvider().getBoolean(MainActivity.KEY_BACK_TAP_ENABLED, false)
+        val prefs = prefsProvider()
+        val backTapEnabled = prefs.getBoolean(MainActivity.KEY_BACK_TAP_ENABLED, false)
         if (!backTapEnabled) return false
+
+        val calibratedThreshold = prefs.getFloat(MainActivity.KEY_BACK_TAP_SENSITIVITY, BACK_TAP_THRESHOLD.toFloat())
 
         val currentTime = clock.uptimeMillis()
         val deltaZ = abs(z - lastZ)
 
-        if (deltaZ > BACK_TAP_THRESHOLD) {
+        if (deltaZ > calibratedThreshold) {
             if (currentTime - lastTapTime > BACK_TAP_WINDOW_MS) {
                 tapCount = 1
             } else {
