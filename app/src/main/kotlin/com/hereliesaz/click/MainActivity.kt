@@ -133,8 +133,11 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
-        updateServiceStatus()
-        updateOverlayPermissionStatus()
+        // Post UI updates to the view's message queue to ensure they run after layout
+        serviceStatusText.post {
+            updateServiceStatus()
+            updateOverlayPermissionStatus()
+        }
         loadPreferences()
     }
 
