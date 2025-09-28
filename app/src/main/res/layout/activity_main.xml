@@ -23,7 +23,7 @@
         android:text="Service Status: Disabled"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:padding="12dp"
-        android:background="?attr/colorSurfaceVariant"
+        android:background="@color/m3_surface_variant" 
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginBottom="8dp"/>
 
@@ -41,7 +41,7 @@
         android:text="Overlay Permission: Denied"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:padding="12dp"
-        android:background="?attr/colorSurfaceVariant"
+        android:background="@color/m3_surface_variant" 
         android:textColor="?attr/colorOnSurfaceVariant"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"/>
