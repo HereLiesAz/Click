@@ -1,0 +1,57 @@
+# Project File Index
+
+This document provides a brief but thorough description of all non-ignored files in the project.
+
+- `./.gitignore`: Specifies intentionally untracked files to ignore.
+- `./build.gradle.kts`: Gradle build script for the root project.
+- `./gradlew`: Gradle wrapper script for Unix-based systems.
+- `./gradle/wrapper/gradle-wrapper.properties`: Configuration file for the Gradle wrapper.
+- `./gradle/wrapper/gradle-wrapper.jar`: The Gradle wrapper JAR file.
+- `./app/build.gradle.kts`: Gradle build script for the `app` module.
+- `./app/src/main/kotlin/com/hereliesaz/click/TapCalibrationActivity.kt`: Activity for calibrating the back-tap sensitivity.
+- `./app/src/main/kotlin/com/hereliesaz/click/Clock.kt`: A clock utility class.
+- `./app/src/main/kotlin/com/hereliesaz/click/MainActivity.kt`: The main activity of the application.
+- `./app/src/main/kotlin/com/hereliesaz/click/ClickAccessibilityService.kt`: The accessibility service that listens for back-tap gestures.
+- `./app/src/main/kotlin/com/hereliesaz/click/GestureCaptureActivity.kt`: Activity for capturing the on-screen location of the camera shutter button.
+- `./app/src/main/kotlin/com/hereliesaz/click/CameraTriggerHandler.kt`: Handles the logic for triggering the camera shutter.
+- `./app/src/main/res/drawable/click_logo.webp`: The application logo.
+- `./app/src/main/res/drawable/ic_launcher_foreground.xml`: Foreground layer for the launcher icon.
+- `./app/src/main/res/drawable/ic_launcher_background.xml`: Background layer for the launcher icon.
+- `./app/src/main/res/drawable/capture_instruction_background.xml`: Background for the gesture capture instruction view.
+- `./app/src/main/res/layout/activity_main.xml`: Layout for the main activity.
+- `./app/src/main/res/layout/overlay_layout.xml`: Layout for the overlay shown by the accessibility service.
+- `./app/src/main/res/layout/activity_gesture_capture.xml`: Layout for the gesture capture activity.
+- `./app/src/main/res/layout/activity_tap_calibration.xml`: Layout for the tap calibration activity.
+- `./app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp`: Round launcher icon for xxxhdpi screens.
+- `./app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp`: Launcher icon for xxxhdpi screens.
+- `./app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.webp`: Foreground for launcher icon for xxxhdpi screens.
+- `./app/src/main/res/xml/accessibility_service_config.xml`: Configuration for the accessibility service.
+- `./app/src/main/res/values-night/colors.xml`: Color definitions for dark theme.
+- `./app/src/main/res/values/strings.xml`: String resources for the application.
+- `./app/src/main/res/values/themes.xml`: Theme definitions for the application.
+- `./app/src/main/res/values/colors.xml`: Color definitions for the application.
+- `./app/src/main/res/values/ic_launcher_background.xml`: Background color for the launcher icon.
+- `./app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp`: Round launcher icon for xxhdpi screens.
+- `./app/src/main/res/mipmap-xxhdpi/ic_launcher.webp`: Launcher icon for xxhdpi screens.
+- `./app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.webp`: Foreground for launcher icon for xxhdpi screens.
+- `./app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp`: Round launcher icon for xhdpi screens.
+- `./app/src/main/res/mipmap-xhdpi/ic_launcher.webp`: Launcher icon for xhdpi screens.
+- `./app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp`: Foreground for launcher icon for xhdpi screens.
+- `./app/src/main/res/mipmap-mdpi/ic_launcher_round.webp`: Round launcher icon for mdpi screens.
+- `./app/src/main/res/mipmap-mdpi/ic_launcher.webp`: Launcher icon for mdpi screens.
+- `./app/src/main/res/mipmap-mdpi/ic_launcher_foreground.webp`: Foreground for launcher icon for mdpi screens.
+- `./app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml`: Adaptive launcher icon for API 26+.
+- `./app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml`: Round adaptive launcher icon for API 26+.
+- `./app/src/main/res/mipmap-hdpi/ic_launcher_round.webp`: Round launcher icon for hdpi screens.
+- `./app/src/main/res/mipmap-hdpi/ic_launcher.webp`: Launcher icon for hdpi screens.
+- `./app/src/main/res/mipmap-hdpi/ic_launcher_foreground.webp`: Foreground for launcher icon for hdpi screens.
+- `./app/src/main/ic_launcher-playstore.png`: The application's icon for the Play Store.
+- `./app/src/main/AndroidManifest.xml`: The Android application manifest file.
+- `./app/src/test/kotlin/com/hereliesaz/click/CameraTriggerHandlerTest.kt`: Unit tests for the `CameraTriggerHandler`.
+- `./README.md`: The README file for the project.
+- `./gradlew.bat`: Gradle wrapper script for Windows.
+- `./AGENTS.md`: Instructions for AI agents working on this codebase.
+- `./docs/file_index.md`: This file, which contains a list of all non-ignored files and their descriptions.
+- `./gradle.properties`: Project-wide Gradle settings.
+- `./settings.gradle`: Settings file for the Gradle build.
+- `./LICENSE`: The license for the project.
