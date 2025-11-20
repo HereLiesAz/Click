@@ -164,6 +164,7 @@ class MainActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             )
+            recreate()
         }
 
         backTapSwitch.setOnCheckedChangeListener { _, isChecked ->
