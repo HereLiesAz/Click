@@ -17,4 +17,5 @@
     <string name="calibrate">Calibrate</string>
     <string name="calibrate_back_tap_title">Calibrate Back Tap</string>
     <string name="calibrate_back_tap_instructions">To calibrate, firmly tap the back of your phone three times. Use a normal tapping force.</string>
+    <string name="enable_volume_key_shutter">Enable Volume Key Shutter</string>
 </resources>
