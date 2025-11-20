@@ -95,6 +95,16 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"/>
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/volume_key_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_volume_key_shutter"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/lens_tap_proximity_switch"
             android:layout_width="match_parent"

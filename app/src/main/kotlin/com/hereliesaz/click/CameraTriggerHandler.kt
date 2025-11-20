@@ -151,4 +151,14 @@ class CameraTriggerHandler(
         }
         return false
     }
+
+    /**
+     * Processes a volume key event.
+     *
+     * @return `true` if a volume key event should trigger a picture, `false` otherwise.
+     */
+    fun handleVolumeKeyEvent(): Boolean {
+        val volumeKeyShutterEnabled = prefsProvider().getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)
+        return volumeKeyShutterEnabled
+    }
 }

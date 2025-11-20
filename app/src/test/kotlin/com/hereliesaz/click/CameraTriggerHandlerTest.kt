@@ -94,4 +94,16 @@ class CameraTriggerHandlerTest {
         // A small change should not trigger it
         assertFalse(triggerHandler.handleAccelerometerEvent(x = 1f, y = 1f, z = 1f, lastX = 0f, lastY = 0f, lastZ = 0f))
     }
+
+    @Test
+    fun `handleVolumeKeyEvent returns true when enabled`() {
+        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)).thenReturn(true)
+        assertTrue(triggerHandler.handleVolumeKeyEvent())
+    }
+
+    @Test
+    fun `handleVolumeKeyEvent returns false when disabled`() {
+        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)).thenReturn(false)
+        assertFalse(triggerHandler.handleVolumeKeyEvent())
+    }
 }

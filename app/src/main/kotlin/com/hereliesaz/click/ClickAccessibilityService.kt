@@ -180,6 +180,20 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
     /** Required by SensorEventListener, but not used here. */
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
+    override fun onKeyEvent(event: android.view.KeyEvent): Boolean {
+        val keyCode = event.keyCode
+        if (event.action == android.view.KeyEvent.ACTION_DOWN &&
+            (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP || keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) {
+            if (triggerHandler.handleVolumeKeyEvent()) {
+                takePicture()
+                // The event is handled, so prevent it from propagating further (e.g., changing the volume).
+                return true
+            }
+        }
+        // For all other keys, let the system handle them as usual.
+        return super.onKeyEvent(event)
+    }
+
     /**
      * Dispatches a tap gesture to take a picture.
      * If custom shutter coordinates are saved, it uses them. Otherwise, it defaults
