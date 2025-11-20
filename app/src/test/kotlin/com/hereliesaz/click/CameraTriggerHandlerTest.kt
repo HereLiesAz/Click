@@ -94,4 +94,20 @@ class CameraTriggerHandlerTest {
         // A small change should not trigger it
         assertFalse(triggerHandler.handleAccelerometerEvent(x = 1f, y = 1f, z = 1f, lastX = 0f, lastY = 0f, lastZ = 0f))
     }
+
+    @Test
+    fun `volume key event returns true and has cooldown`() {
+        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_ENABLED, false)).thenReturn(true)
+
+        // First event should be true
+        assertTrue(triggerHandler.handleVolumeKeyEvent())
+
+        // Advance time slightly, should still be in cooldown
+        testClock.advanceTime(100)
+        assertFalse(triggerHandler.handleVolumeKeyEvent())
+
+        // Advance time past the cooldown
+        testClock.advanceTime(500)
+        assertTrue(triggerHandler.handleVolumeKeyEvent())
+    }
 }

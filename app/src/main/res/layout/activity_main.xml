@@ -125,6 +125,16 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"/>
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/volume_key_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_volume_key_trigger"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
         <Button
             android:id="@+id/calibrate_back_tap_button"
             style="?attr/materialButtonOutlinedStyle"

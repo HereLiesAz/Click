@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ScrollView
@@ -175,6 +176,20 @@ class ClickAccessibilityService : AccessibilityService(), SensorEventListener {
                 lastZ = z
             }
         }
+    }
+
+    override fun onKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                    if (triggerHandler.handleVolumeKeyEvent()) {
+                        takePicture()
+                    }
+                    return true
+                }
+            }
+        }
+        return super.onKeyEvent(event)
     }
 
     /** Required by SensorEventListener, but not used here. */

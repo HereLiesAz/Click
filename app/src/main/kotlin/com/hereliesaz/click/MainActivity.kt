@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var lensTapProximitySwitch: SwitchCompat
     private lateinit var lensTapVibrationSwitch: SwitchCompat
     private lateinit var backTapSwitch: SwitchMaterial
+    private lateinit var volumeKeySwitch: SwitchMaterial
     private lateinit var vibrationSensitivitySeekbar: SeekBar
     private lateinit var themeSwitch: SwitchMaterial
     private lateinit var prefs: SharedPreferences
@@ -53,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         const val KEY_SHUTTER_X = "shutter_x"
         const val KEY_SHUTTER_Y = "shutter_y"
         const val KEY_BACK_TAP_SENSITIVITY = "back_tap_sensitivity"
+        const val KEY_VOLUME_KEY_ENABLED = "volumeKeyEnabled"
 
         /**
          * Checks if the specified Accessibility Service is currently enabled in the system settings.
@@ -94,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         lensTapProximitySwitch = findViewById(R.id.lens_tap_proximity_switch)
         lensTapVibrationSwitch = findViewById(R.id.lens_tap_vibration_switch)
         backTapSwitch = findViewById(R.id.back_tap_switch)
+        volumeKeySwitch = findViewById(R.id.volume_key_switch)
         vibrationSensitivitySeekbar = findViewById(R.id.vibration_sensitivity_seekbar)
         themeSwitch = findViewById(R.id.theme_switch)
 
@@ -166,6 +169,10 @@ class MainActivity : AppCompatActivity() {
         backTapSwitch.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit().putBoolean(KEY_BACK_TAP_ENABLED, isChecked).apply()
         }
+
+        volumeKeySwitch.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean(KEY_VOLUME_KEY_ENABLED, isChecked).apply()
+        }
     }
 
     /**
@@ -198,6 +205,7 @@ class MainActivity : AppCompatActivity() {
         lensTapProximitySwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_PROXIMITY_ENABLED, false)
         lensTapVibrationSwitch.isChecked = prefs.getBoolean(KEY_LENS_TAP_VIBRATION_ENABLED, false)
         backTapSwitch.isChecked = prefs.getBoolean(KEY_BACK_TAP_ENABLED, false)
+        volumeKeySwitch.isChecked = prefs.getBoolean(KEY_VOLUME_KEY_ENABLED, false)
         vibrationSensitivitySeekbar.progress = prefs.getInt(KEY_VIBRATION_SENSITIVITY, 50)
         vibrationSensitivitySeekbar.isEnabled = lensTapVibrationSwitch.isChecked
     }
