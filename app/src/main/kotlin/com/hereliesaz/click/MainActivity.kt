@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var volumeKeySwitch: SwitchMaterial
     private lateinit var vibrationSensitivitySeekbar: SeekBar
     private lateinit var themeSwitch: SwitchMaterial
+    private lateinit var volumeKeySwitch: SwitchMaterial
     private lateinit var prefs: SharedPreferences
 
     companion object {
@@ -99,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         volumeKeySwitch = findViewById(R.id.volume_key_switch)
         vibrationSensitivitySeekbar = findViewById(R.id.vibration_sensitivity_seekbar)
         themeSwitch = findViewById(R.id.theme_switch)
+        volumeKeySwitch = findViewById(R.id.volume_key_switch)
 
 
         val enableServiceButton: Button = findViewById(R.id.enable_service_button)
@@ -209,6 +211,7 @@ class MainActivity : AppCompatActivity() {
         volumeKeySwitch.isChecked = prefs.getBoolean(KEY_VOLUME_KEY_ENABLED, false)
         vibrationSensitivitySeekbar.progress = prefs.getInt(KEY_VIBRATION_SENSITIVITY, 50)
         vibrationSensitivitySeekbar.isEnabled = lensTapVibrationSwitch.isChecked
+        volumeKeySwitch.isChecked = prefs.getBoolean(KEY_VOLUME_KEY_SHUTTER_ENABLED, false)
     }
 
     /**
