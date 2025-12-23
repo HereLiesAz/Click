@@ -23,6 +23,7 @@ class CameraTriggerHandler(
     private var lastFingerprintTime = -1L
     private var lastTapTime = 0L
     private var tapCount = 0
+    private var lastVolumePressTime = -1L
 
     companion object {
         private const val PROXIMITY_TAP_THRESHOLD_MS = 500L
@@ -33,6 +34,7 @@ class CameraTriggerHandler(
         private const val BACK_TAP_THRESHOLD = 25.0
         private const val BACK_TAP_WINDOW_MS = 500L
         private const val BACK_TAP_COOLDOWN_MS = 1000L
+        private const val VOLUME_KEY_COOLDOWN_MS = 500L
     }
 
     /**
@@ -153,12 +155,20 @@ class CameraTriggerHandler(
     }
 
     /**
-     * Processes a volume key event.
+     * Processes a volume key event. This method uses a simple cooldown
+     * to prevent a single press from triggering multiple pictures.
      *
-     * @return `true` if a volume key event should trigger a picture, `false` otherwise.
+     * @return `true` if a volume key press should trigger a picture, `false` otherwise.
      */
     fun handleVolumeKeyEvent(): Boolean {
-        val volumeKeyShutterEnabled = prefsProvider().getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)
-        return volumeKeyShutterEnabled
+        val volumeKeyEnabled = prefsProvider().getBoolean(MainActivity.KEY_VOLUME_KEY_ENABLED, false)
+        if (!volumeKeyEnabled) return false
+
+        val currentTime = clock.uptimeMillis()
+        if (lastVolumePressTime == -1L || currentTime - lastVolumePressTime > VOLUME_KEY_COOLDOWN_MS) {
+            lastVolumePressTime = currentTime
+            return true
+        }
+        return false
     }
 }

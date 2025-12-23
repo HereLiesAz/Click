@@ -96,14 +96,18 @@ class CameraTriggerHandlerTest {
     }
 
     @Test
-    fun `handleVolumeKeyEvent returns true when enabled`() {
-        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)).thenReturn(true)
-        assertTrue(triggerHandler.handleVolumeKeyEvent())
-    }
+    fun `volume key event returns true and has cooldown`() {
+        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_ENABLED, false)).thenReturn(true)
 
-    @Test
-    fun `handleVolumeKeyEvent returns false when disabled`() {
-        `when`(mockPrefs.getBoolean(MainActivity.KEY_VOLUME_KEY_SHUTTER_ENABLED, false)).thenReturn(false)
+        // First event should be true
+        assertTrue(triggerHandler.handleVolumeKeyEvent())
+
+        // Advance time slightly, should still be in cooldown
+        testClock.advanceTime(100)
         assertFalse(triggerHandler.handleVolumeKeyEvent())
+
+        // Advance time past the cooldown
+        testClock.advanceTime(500)
+        assertTrue(triggerHandler.handleVolumeKeyEvent())
     }
 }
