@@ -32,3 +32,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# IDEaz Secrets
+**/utils/Secrets.kt
