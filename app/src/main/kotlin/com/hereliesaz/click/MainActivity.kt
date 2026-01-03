@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        com.hereliesaz.click.utils.CrashReporter.init(this)
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         // Apply the theme before setting the content view
         applyTheme()
