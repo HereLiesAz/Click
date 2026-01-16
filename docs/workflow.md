@@ -26,3 +26,11 @@ This document describes the development workflow for the Click application.
 *   The version number should be updated in the `build.gradle.kts` file.
 *   The release branch should be tested thoroughly before it is merged into the `main` branch.
 *   Once the release branch is merged, a new tag should be created for the release.
+
+## 5. Automated Issue Management
+
+*   This repository uses the `google-labs-code/jules-invoke` action to automatically assign and attempt to resolve new issues using an AI agent (Jules).
+*   When a new issue is opened (or a security advisory published), the workflow triggers Jules to:
+    *   Assign the issue to itself.
+    *   Attempt to resolve the issue by modifying code, running tests, and updating documentation.
+    *   Close the issue upon successful verification.
