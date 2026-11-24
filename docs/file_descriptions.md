@@ -31,3 +31,5 @@ This document provides a brief but thorough description of all key non-ignored f
 ## Test Files (`app/src/test/`)
 
 -   `./kotlin/com/hereliesaz/click/CameraTriggerHandlerTest.kt`: Unit tests for the `CameraTriggerHandler`, ensuring the core business logic works as expected.
+
+- `app/src/{githubUpdates,playUpdates}/kotlin/com/hereliesaz/click/AppUpdateSource.kt`: Distribution-specific AzNavRail update checker entry points. Play dependencies are excluded from GitHub builds.

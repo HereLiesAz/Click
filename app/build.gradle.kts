@@ -18,7 +18,11 @@ val appVersionCode = prop("versionCodeOverride", "releaseVersionCode")?.toIntOrN
 val appVersionName = prop("versionNameOverride", "releaseVersionName", "versionName")
     ?: listOf("versionMajor", "versionMinor", "versionPatch").joinToString(".") { versionProps.getProperty(it, "0").trim() }
 
+val playUpdates = providers.gradleProperty("azPlayUpdates").map { it.toBooleanStrict() }
+    .orElse(providers.gradleProperty("releaseVersionCode").map { true }).orElse(false)
+
 android {
+    sourceSets.getByName("main").java.srcDir(if (playUpdates.get()) "src/playUpdates/kotlin" else "src/githubUpdates/kotlin")
     namespace = "com.hereliesaz.click"
     compileSdk = 36
 
@@ -50,6 +54,8 @@ android {
 }
 
 dependencies {
+    implementation("com.github.HereLiesAz.AzNavRail:aznavrail-updates-compat:12.5")
+    if (playUpdates.get()) implementation("com.github.HereLiesAz.AzNavRail:aznavrail-updates-play-compat:12.5")
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.13.0") // Updated version

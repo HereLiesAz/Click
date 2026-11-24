@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         applyTheme() // Apply the theme before setting the content view
         setContentView(R.layout.activity_main)
+        checkAppUpdate(this)
 
         // Initialize UI components by finding them in the layout
         serviceStatusText = findViewById(R.id.service_status_text)
