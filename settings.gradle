@@ -8,6 +8,13 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven {
+            url 'https://raw.githubusercontent.com/HereLiesAz/AzNavRail/update-maven/'
+            content {
+                includeModule('com.github.HereLiesAz.AzNavRail', 'aznavrail-updates-compat')
+                includeModule('com.github.HereLiesAz.AzNavRail', 'aznavrail-updates-play-compat')
+            }
+        }
         google()
         mavenCentral()
     }

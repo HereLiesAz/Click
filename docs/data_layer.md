@@ -16,3 +16,5 @@ The Click application does not have any complex data models. The data is stored 
 ## 3. Data Flow
 
 The data flows from the `MainActivity` to the `CameraTriggerHandler`. The `MainActivity` is responsible for reading the user's preferences from `SharedPreferences` and passing them to the `CameraTriggerHandler`. The `CameraTriggerHandler` then uses this information to determine which triggers to enable and how to respond to sensor events.
+
+Release update checks use AzNavRail 12.5 and are independent of sensor and accessibility data.

@@ -30,3 +30,7 @@ To make this work, you have to grant two permissions. The app will guide you to 
 ## A Note on Battery
 
 To conserve battery, the app's sensors are only active when a known camera app is running in the foreground. When you switch to another app or turn off the screen, sensor listening is automatically paused.
+
+## Updates
+
+Release builds check for updates through AzNavRail 12.5: Google Play installs use Play, and sideloaded GitHub builds check stable releases. Debug builds skip checks. Only release metadata is requested.
